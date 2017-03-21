@@ -26,15 +26,35 @@ void AppClass::Update(void)
 		CameraRotation();
 
 	//Rotation matrices
-	matrix4 rotX = glm::rotate(IDENTITY_M4, m_v3Orientation.x, REAXISX);
-	matrix4 rotY = glm::rotate(IDENTITY_M4, m_v3Orientation.y, REAXISY);
-	matrix4 rotZ = glm::rotate(IDENTITY_M4, m_v3Orientation.z, REAXISZ);
+	//matrix4 rotX = glm::rotate(IDENTITY_M4, m_v3Orientation.x, REAXISX);
+	//matrix4 rotY = glm::rotate(IDENTITY_M4, m_v3Orientation.y, REAXISY);
+	//matrix4 rotZ = glm::rotate(IDENTITY_M4, m_v3Orientation.z, REAXISZ);
+
+
+	quaternion qx1 = glm::angleAxis(0.0f, REAXISX);
+	quaternion qy1 = glm::angleAxis(0.0f, REAXISY);
+	quaternion qz1 = glm::angleAxis(0.0f, REAXISZ);
+
+	quaternion qx2 = glm::angleAxis(359.9f, REAXISX);
+	quaternion qy2 = glm::angleAxis(359.9f, REAXISY);
+	quaternion qz2 = glm::angleAxis(359.9f, REAXISZ);
+
+	float fPercentageX = MapValue(m_v3Orientation.x, 0.0f, 360.0f, 0.0f, 1.0f);
+	float fPercentageY = MapValue(m_v3Orientation.y, 0.0f, 360.0f, 0.0f, 1.0f);
+	float fPercentageZ = MapValue(m_v3Orientation.z, 0.0f, 360.0f, 0.0f, 1.0f);
 
 	//linear combination
-	m_mToWorld = rotX * rotY * rotZ;
+	//m_mToWorld = rotX * rotY * rotZ;
+
+
+	quaternion rotX = glm::mix(qx1, qx2, fPercentageX);
+	quaternion rotY = glm::mix(qy1, qy2, fPercentageY);
+	quaternion rotZ = glm::mix(qz1, qz2, fPercentageZ);
+
+	quaternion quatFinal = rotX * rotY * rotZ;
 
 	//Setting the model matrix
-	m_pMeshMngr->SetModelMatrix(m_mToWorld, "Steve");
+	m_pMeshMngr->SetModelMatrix(ToMatrix4(quatFinal), "Steve");
 
 	//Adding the instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("Steve");
