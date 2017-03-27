@@ -47,10 +47,36 @@ void AppClass::Update(void)
 	float fEarthHalfRevTime = 0.5f * m_fDay; // Move for Half a day
 	float fMoonHalfOrbTime = 14.0f * m_fDay; //Moon's orbit is 28 earth days, so half the time for half a route
 
+	//MY WORK HERE
+	//quaternion qx1 = glm::angleAxis(0.0f, REAXISX);
+	quaternion qy1 = glm::angleAxis(0.0f, REAXISY);
+	//quaternion qz1 = glm::angleAxis(0.0f, REAXISZ);
+
+	//quaternion qx2 = glm::angleAxis(359.9f, REAXISX);
+	quaternion qy2 = glm::angleAxis(359.9f, REAXISY);
+	//quaternion qz2 = glm::angleAxis(359.9f, REAXISZ);
+
+	//Map the time to a percentage of rotation
+	float fPercentageEarthR = MapValue((float)fRunTime, 0.0f, 360.0f, 0.0f, 1.0f);
+	float fPercentageEarthO = MapValue((float)fRunTime, 0.0f, 360.0f, 0.0f, 1.0f);
+	float fPercentageMoonR = MapValue((float)fRunTime, 0.0f, 360.0f, 0.0f, 1.0f);
+	float fPercentageMoonO = MapValue((float)fRunTime, 0.0f, 360.0f, 0.0f, 1.0f);
+
+	//Use the percentage with this the angle quaternions
+	quaternion rotEarth = glm::mix(qy1, qy2, fPercentageEarthR);
+	quaternion orbitEarth = glm::mix(qy1, qy2, fPercentageEarthO);
+	quaternion rotMoon = glm::mix(qy1, qy2, fPercentageMoonR);
+	quaternion orbitMoon = glm::mix(qy1, qy2, fPercentageMoonO);
+
+	//Set the position matrix for the earth
+	matrix4 m4Earth = glm::mat4_cast(rotEarth) * (fEarthHalfRevTime * 2) * glm::mat4_cast(orbitEarth) * (fEarthHalfOrbTime * 2) * glm::translate(11.0f, 0.0f, 0.0f);
+	//Set the position matrix for the Moon
+	matrix4 m4Moon = glm::mat4_cast(rotMoon) * glm::mat4_cast(orbitMoon) * (fMoonHalfOrbTime * 2) * glm::translate(2.0f, 0.0f, 0.0f);
+
 	//Setting the matrices
 	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Sun");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Earth");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Moon");
+	m_pMeshMngr->SetModelMatrix(m4Earth, "Earth");
+	m_pMeshMngr->SetModelMatrix(m4Earth, "Moon");
 
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -106,7 +132,7 @@ void AppClass::Display(void)
 	}
 	
 	m_pMeshMngr->Render(); //renders the render list
-
+	m_pMeshMngr->ClearRenderList(); //Reset the Render list after render
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
