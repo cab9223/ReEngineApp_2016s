@@ -10,7 +10,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	//Creating a ReEngAppClass object providing the arguments and the window handler
 	AppClass Application(hInstance, lpCmdLine, nCmdShow);
-	//Running the Application's Main Loop
+	//RE_RUNNING the Application's Main Loop
 	Application.Run();
 	//Finalizing the Application
 	return 0;

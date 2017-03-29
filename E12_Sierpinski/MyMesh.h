@@ -3,7 +3,7 @@ Programmer: Alberto Bobadilla (labigm@rit.edu)
 Date: 2016/02
 Notes: This is a simplified version of MyMesh
 inside of ReEng.dll, its stripped out of a lot
-of functionality in order to focus on important
+of functionality in order to focuss on important
 concepts of OpenGL, please use a MyMesh object
 for better functionality.
 ----------------------------------------------*/
@@ -119,6 +119,16 @@ public:
 	OUTPUT: ---
 	*/
 	virtual void Render(matrix4 a_mProjection, matrix4 a_mView, matrix4 a_mWorld);
+
+	/*
+	USAGE: renders the object in wireframe mode
+	ARGUMENTS:
+	matrix4 a_mViewProjection -> View * Projection matrix
+	matrix4 a_mToWorld -> to world matrix
+	vector3 a_v3Color -> Color to render
+	OUTPUT: ---
+	*/
+	virtual void RenderList(matrix4 a_mProjectionMatrix, matrix4 a_mViewMatrix, float* a_fMatrixArray, int a_nInstances);
 
 protected:
 	/*

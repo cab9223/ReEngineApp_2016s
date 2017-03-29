@@ -2,32 +2,40 @@
 void AppClass::InitWindow(String a_sWindowName)
 {
 	//Using Base InitWindow method
-	super::InitWindow("E12 - Instance Rendering");
-	m_v4ClearColor = vector4(REBLACK, 1.0f);
+	super::InitWindow("Instance Rendering - Example");
 }
 
 void AppClass::InitVariables(void)
 {
-	m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 0.0f, 15.0f), vector3(0.0f, 0.0f, 0.0f), REAXISY);
-
+	//Reserve Memory for a MyMeshClass object
 	m_pMesh = new MyMesh();
-	
-	//Creating the Mesh points
-	m_pMesh->AddVertexPosition(vector3(-1.0f, -1.0f, 0.0f));
+
+	m_pMesh->AddVertexPosition(vector3(-1.0f, 0.0f, 0.0f));
+	m_pMesh->AddVertexPosition(vector3(1.0f, 0.0f, 0.0f));
+	m_pMesh->AddVertexPosition(vector3(0.0f, 1.0f, 0.0f));
+
+	m_pMesh->AddVertexColor(REGREEN);
 	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3( 1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
-	m_pMesh->AddVertexPosition(vector3(1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
-	m_pMesh->AddVertexPosition(vector3( 1.0f, 1.0f, 0.0f));
 	m_pMesh->AddVertexColor(REBLUE);
 
-	//Compiling the mesh
 	m_pMesh->CompileOpenGL3X();
+
+	m_fMatrixArray = new float[m_nObjects * 16];
+	const float* m4MVP = glm::value_ptr(glm::translate(vector3(0.0f, 0.0f, 0.0f)));
+	for (int nObject = 0; nObject < m_nObjects; nObject++)
+	{
+		//Build the scuture of the triangles
+		if (nObject > 0 && nObject < 3) {
+			m4MVP = glm::value_ptr(glm::translate(vector3(-3.0 + (2.0f * nObject), -1.0f + -nObject + nObject, 0.0f)));
+		} else if (nObject > 2 && nObject < 5) {
+			m4MVP = glm::value_ptr(glm::translate(vector3(-14.0 + (4.0f * nObject), -2.0f + -nObject + nObject, 0.0f)));
+		} else if (nObject > 4 && nObject < 9) {
+			m4MVP = glm::value_ptr(glm::translate(vector3(-13.0 + (2.0f * nObject), -3.0f + -nObject + nObject, 0.0f)));
+		}
+		//Make them
+		memcpy(&m_fMatrixArray[nObject * 16], m4MVP, 16 * sizeof(float));
+	}
+
 }
 
 void AppClass::Update(void)
@@ -35,9 +43,8 @@ void AppClass::Update(void)
 	//Update the system so it knows how much time has passed since the last call
 	m_pSystem->UpdateTime();
 
-	//Is the arcball active?
-	if (m_bArcBall == true)
-		ArcBall();
+	//Call the Arcball method
+	ArcBall();
 
 	//Is the first person camera active?
 	if (m_bFPC == true)
@@ -50,23 +57,20 @@ void AppClass::Update(void)
 	int nFPS = m_pSystem->GetFPS();
 	//print info into the console
 	printf("FPS: %d            \r", nFPS);//print the Frames per Second
-										  //Print info on the screen
-	m_pMeshMngr->PrintLine("");
-	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
+	//Print info on the screen
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
 }
 
 void AppClass::Display(void)
 {
+	//clear the screen
 	ClearScreen();
-	
-	//Matrices from the camera
-	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
-	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 
-	m_pMesh->Render(m4Projection, m4View, IDENTITY_M4);//Rendering nObject(s)											   //clear the screen
-	
+	m_pMesh->RenderList(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix(), m_fMatrixArray, m_nObjects);//Rendering nObjects
+
+	//Render the grid based on the camera's mode:
+	m_pMeshMngr->AddGridToRenderListBasedOnCamera(m_pCameraMngr->GetCameraMode());
 	m_pMeshMngr->Render(); //renders the render list
 	m_pMeshMngr->ClearRenderList(); //Reset the Render list after render
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers

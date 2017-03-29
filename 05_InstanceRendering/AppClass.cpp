@@ -10,9 +10,9 @@ void AppClass::InitVariables(void)
 	//Reserve Memory for a MyMeshClass object
 	m_pMesh = new MyMesh();
 
-	m_pMesh->AddVertexPosition(vector3(0.0f, 0.0f, 0.0f));
-	m_pMesh->AddVertexPosition(vector3(5.0f, 0.0f, 0.0f));
-	m_pMesh->AddVertexPosition(vector3(0.0f, 5.0f, 0.0f));
+	m_pMesh->AddVertexPosition(vector3(-1.0f, 0.0f, 0.0f));
+	m_pMesh->AddVertexPosition(vector3(1.0f, 0.0f, 0.0f));
+	m_pMesh->AddVertexPosition(vector3(0.0f, 1.0f, 0.0f));
 
 	m_pMesh->AddVertexColor(REGREEN);
 	m_pMesh->AddVertexColor(RERED);
@@ -21,12 +21,18 @@ void AppClass::InitVariables(void)
 	m_pMesh->CompileOpenGL3X();
 
 	m_fMatrixArray = new float[m_nObjects * 16];
+	const float* m4MVP = glm::value_ptr(glm::translate(vector3(0.0f, 0.0f, 0.0f)));
 	for (int nObject = 0; nObject < m_nObjects; nObject++)
 	{
-		const float* m4MVP = glm::value_ptr(
-			glm::translate(vector3(0.01f * -nObject, 0.0f, 1.0f * -nObject)) *
-			glm::rotate(IDENTITY_M4, nObject * 5.0f, REAXISZ)
-			);
+		//Build the scuture of the triangles
+		if (nObject > 0 && nObject < 3) {
+			m4MVP = glm::value_ptr(glm::translate(vector3(-3.0 + (2.0f * nObject), -1.0f + -nObject + nObject, 0.0f)));
+		} else if (nObject > 2 && nObject < 5) {
+			m4MVP = glm::value_ptr(glm::translate(vector3(-14.0 + (4.0f * nObject), -2.0f + -nObject + nObject, 0.0f)));
+		} else if (nObject > 4 && nObject < 9) {
+			m4MVP = glm::value_ptr(glm::translate(vector3(-13.0 + (2.0f * nObject), -3.0f + -nObject + nObject, 0.0f)));
+		}
+		//Make them
 		memcpy(&m_fMatrixArray[nObject * 16], m4MVP, 16 * sizeof(float));
 	}
 
