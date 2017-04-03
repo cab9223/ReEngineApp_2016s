@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E9B44697-A740-484E-BFCC-B9A007E242A2}</ProjectGuid>
+    <ProjectGuid>{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}</ProjectGuid>
     <RootNamespace>05_InstanceRendering</RootNamespace>
     <ProjectName>05_InstanceRendering</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -41,7 +41,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)Z_DELETE\</OutDir>
     <IntDir>$(SolutionDir)Z_DELETE\$(ProjectName)\$(Configuration)\</IntDir>
