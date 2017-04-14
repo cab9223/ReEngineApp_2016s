@@ -57,7 +57,13 @@ void AppClass::Update(void)
 	int nFPS = m_pSystem->GetFPS();
 	//print info into the console
 	printf("FPS: %d            \r", nFPS);//print the Frames per Second
+<<<<<<< HEAD
 	//Print info on the screen
+=======
+										  //Print info on the screen
+	m_pMeshMngr->PrintLine("");//Add a line on top
+	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
+>>>>>>> Source/master
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
 }
