@@ -52,6 +52,18 @@ void AppClass::ProcessKeyboard(void)
 		m_v3Position += vector3(0.1f, 0.0f, 0.0f);
 		m_pBS0->SetModelMatrix(glm::translate(m_v3Position));
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+	{
+		m_v3Rotation.x += 0.1f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+	{
+		m_v3Rotation.y += 0.1f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+	{
+		m_v3Rotation.z += 0.1f;
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		if (!bModifier)

@@ -25,6 +25,8 @@ void AppClass::InitVariables(void)
 
 	matrix4 m4Position2 = glm::translate(vector3(2.5, 2.0, 0.0));
 	m_pMeshMngr->SetModelMatrix(m4Position2, "Cow");
+
+	m_v3Rotation = vector3(0.0f, 0.0f, 0.0f);
 }
 
 void AppClass::Update(void)
@@ -52,12 +54,6 @@ void AppClass::Update(void)
 	float fPercentage = MapValue(fTimer, 0.0f, 3.0f, 0.0f, 1.0f);
 	vector3 v3Current = glm::lerp(v3Start, v3End, fPercentage);
 	matrix4 mTranslation = glm::translate(v3Current);
-
-	//set the translate to create the transform matrix
-	matrix4 m4Transform = glm::translate(m_v3Position) * ToMatrix4(m_qArcBall);
-	m_pMeshMngr->SetModelMatrix(m4Transform, "Zombie"); //set the matrix to the model
-	m_pBS0->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Zombie"));
-	m_pBS0->RenderSphere();//render the bounding sphere
 		
 
 	m_pMeshMngr->SetModelMatrix(mTranslation, "Steve");
@@ -92,6 +88,14 @@ void AppClass::Update(void)
 		fTimer = 0.0f;
 		std::swap(v3Start, v3End);
 	}
+
+	quaternion rotation = glm::quat(m_v3Rotation);
+
+	matrix4 m4Transform = glm::translate(m_v3Position) * glm::mat4_cast(rotation) * ToMatrix4(m_qArcBall);
+
+	m_pMeshMngr->SetModelMatrix(m4Transform, "Zombie"); //set the matrix to the model
+	m_pBS0->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Zombie"));
+	m_pBS0->RenderSphere();//render the bounding sphere
 
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddSkyboxToRenderList();
