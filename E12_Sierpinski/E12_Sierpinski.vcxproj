@@ -12,9 +12,15 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}</ProjectGuid>
+<<<<<<< HEAD
     <RootNamespace>05_InstanceRendering</RootNamespace>
     <ProjectName>05_InstanceRendering</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+=======
+    <RootNamespace>E12_Sierpinski</RootNamespace>
+    <ProjectName>E12_Sierpinski</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+>>>>>>> b50d8fdb85bad325afab7231c33e977154da710f
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
